@@ -44,9 +44,7 @@ $instance = Builder::factory([
 
 **注：** `APIv3`, `APIv2` 以及 `GuzzleHttp\Client` 的 `$config = []` 初始化参数，均融合在一个型参上。
 
-## 企业付款到零钱
-
-[官方开发文档地址](https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2)
+## [企业付款到零钱](https://pay.weixin.qq.com/doc/v2/merchant/4011989673)
 
 ```php
 use WeChatPay\Transformer;
@@ -86,9 +84,7 @@ print_r($res);
 - `$options['nonceless']` - 标量 `scalar` 任意值，语义上即，本次请求不用自动添加`nonce_str`参数，推荐 `boolean(True)`
 - `$options['security']` - 布尔量`True`，语义上即，本次请求需要加载ssl证书，对应的是初始化 `array $config['merchant']` 结构体
 
-## 企业付款到银行卡-获取RSA公钥
-
-[官方开发文档地址](https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay_yhk.php?chapter=24_7&index=4)
+## [企业付款到银行卡-获取RSA公钥](https://pay.weixin.qq.com/doc/v2/merchant/4011941097)
 
 ```php
 use WeChatPay\Transformer;
@@ -110,9 +106,7 @@ $res = $instance
 print_r($res);
 ```
 
-## 付款到银行卡
-
-[官方开发文档地址](https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay_yhk.php?chapter=24_2)
+## [付款到银行卡](https://pay.weixin.qq.com/doc/v2/merchant/4011939840)
 
 ```php
 use WeChatPay\Transformer;
@@ -177,9 +171,7 @@ $res = $instance
 print_r($res);
 ```
 
-## v2沙箱环境-获取验签密钥API
-
-[官方开发文档地址](https://pay.weixin.qq.com/wiki/doc/api/tools/sp_coupon.php?chapter=23_1&index=2)
+## [v2沙箱环境-获取验签密钥API](https://pay.weixin.qq.com/doc/v2/merchant/4011984810)
 
 ```php
 use WeChatPay\Transformer;
@@ -214,9 +206,7 @@ echo $xml;
 
 ## 数据签名
 
-### 商家券-小程序发券APIv2密钥签名
-
-[官方开发文档地址](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_3_1.shtml)
+### [商家券-小程序发券APIv2密钥签名](https://pay.weixin.qq.com/doc/v3/merchant/4012285674)
 
 ```php
 use WeChatPay\Formatter;
@@ -252,9 +242,7 @@ $busiFavor += ['sign' => Hash::sign(
 echo json_encode($busiFavor);
 ```
 
-### 商家券-H5发券APIv2密钥签名
-
-[官方开发文档地址](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_4_1.shtml)
+### [商家券-H5发券APIv2密钥签名](https://pay.weixin.qq.com/doc/v3/merchant/4012285783)
 
 ```php
 use WeChatPay\Formatter;
@@ -285,7 +273,7 @@ echo json_encode($params);
 
 1. 从请求头`Headers`获取`Request-ID`，商户侧`Web`解决方案可能有差异，请求头的`Request-ID`可能大小写不敏感，请根据自身应用来定；
 2. 获取请求`body`体的`XML`纯文本；
-3. 调用`SDK`内置方法，根据[签名算法](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_3)做本地数据签名计算，然后与通知文本的`sign`做`Hash::equals`对比验签；
+3. 调用`SDK`内置方法，根据[签名算法](https://pay.weixin.qq.com/doc/v2/merchant/4011985891)做本地数据签名计算，然后与通知文本的`sign`做`Hash::equals`对比验签；
 4. 消息体需要解密的，调用`SDK`内置方法解密；
 5. 如遇到问题，请拿`Request-ID`点击[这里](https://support.pay.weixin.qq.com/online-service?utm_source=github&utm_medium=wechatpay-php&utm_content=apiv2)，联系官方在线技术支持；
 

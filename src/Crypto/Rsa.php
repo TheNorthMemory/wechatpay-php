@@ -105,7 +105,6 @@ class Rsa
      *
      * @param string $thing - The string in `PKCS#8` format.
      * @return \OpenSSLAsymmetricKey|resource|mixed
-     * @throws UnexpectedValueException
      */
     public static function fromPkcs8(
         #[\SensitiveParameter]
@@ -121,7 +120,6 @@ class Rsa
      * @param string $thing - The string in `PKCS#1` format.
      * @param string $type - Either `self::KEY_TYPE_PUBLIC` or `self::KEY_TYPE_PRIVATE` string, default is `self::KEY_TYPE_PRIVATE`.
      * @return \OpenSSLAsymmetricKey|resource|mixed
-     * @throws UnexpectedValueException
      */
     public static function fromPkcs1(
         #[\SensitiveParameter]
@@ -137,7 +135,6 @@ class Rsa
      *
      * @param string $thing - The string in `SKPI` format.
      * @return \OpenSSLAsymmetricKey|resource|mixed
-     * @throws UnexpectedValueException
      */
     public static function fromSpki(string $thing)
     {
@@ -253,7 +250,7 @@ class Rsa
     /**
      * Check the padding mode whether or nor supported.
      *
-     * @param int $padding - The padding mode, only support `OPENSSL_PKCS1_PADDING`, otherwise thrown `\UnexpectedValueException`.
+     * @param int $padding - The padding mode, only support the `OPENSSL_PKCS1_OAEP_PADDING` mode, otherwise thrown `\UnexpectedValueException`.
      *
      * @throws UnexpectedValueException
      */

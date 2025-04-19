@@ -33,7 +33,7 @@
 
 项目支持的环境如下：
 
-+ Guzzle 7.0，PHP >= 7.2.5
++ Guzzle 7，PHP >= 7.2.5
 + Guzzle 6.5，PHP >= 7.1.2
 
 我们推荐使用目前处于 [Active Support](https://www.php.net/supported-versions.php) 阶段的 PHP 8 和 Guzzle 7。
@@ -48,7 +48,7 @@ composer require wechatpay/wechatpay
 
 ## 开始
 
-:information_source: 以下是 [微信支付 API v3](https://pay.weixin.qq.com/docs/merchant/development/interface-rules/introduction.html) 的指引。如果你是 API v2 的使用者，请看 [README_APIv2](README_APIv2.md)。
+:information_source: 以下是 [微信支付 API v3](https://pay.weixin.qq.com/doc/v3/merchant/4012081606) 的指引。如果你是 API v2 的使用者，请看 [README_APIv2](README_APIv2.md)。
 
 ### 概念
 
@@ -78,8 +78,6 @@ require_once('vendor/autoload.php');
 use WeChatPay\Builder;
 use WeChatPay\Crypto\Rsa;
 
-// 设置参数
-
 // 商户号
 $merchantId = '190000****';
 
@@ -94,10 +92,13 @@ $merchantCertificateSerial = '3775B6A45ACD588826D15E583A95F5DD********';
 $platformCertificateFilePath  = 'file:///path/to/wechatpay/certificate.pem';
 $onePlatformPublicKeyInstance = Rsa::from($platformCertificateFilePath, Rsa::KEY_TYPE_PUBLIC);
 
+// APIv3 的「平台证书」接入模式 {{{
 // 「微信支付平台证书」的「平台证书序列号」
 // 可以从「微信支付平台证书」文件解析，也可以在 商户平台 -> 账户中心 -> API安全 查询到
 $platformCertificateSerial = '7132D72A03E93CDDF8C03BBD1F37EEDF********';
+// }}}
 
+// APIv3 的「微信支付公钥」接入模式 {{{
 // 从本地文件中加载「微信支付公钥」，用来验证微信支付应答的签名
 $platformPublicKeyFilePath    = 'file:///path/to/wechatpay/publickey.pem';
 $twoPlatformPublicKeyInstance = Rsa::from($platformPublicKeyFilePath, Rsa::KEY_TYPE_PUBLIC);
@@ -105,12 +106,14 @@ $twoPlatformPublicKeyInstance = Rsa::from($platformPublicKeyFilePath, Rsa::KEY_T
 // 「微信支付公钥」的「微信支付公钥ID」
 // 需要在 商户平台 -> 账户中心 -> API安全 查询
 $platformPublicKeyId = 'PUB_KEY_ID_01142321349124100000000000********';
+// }}}
 
 // 构造一个 APIv3 客户端实例
 $instance = Builder::factory([
     'mchid'      => $merchantId,
     'serial'     => $merchantCertificateSerial,
     'privateKey' => $merchantPrivateKeyInstance,
+    // 根据商户号所能接入的APIv3模式(微信支付公钥/平台证书)按需配置certs对象内容
     'certs'      => [
         $platformCertificateSerial => $onePlatformPublicKeyInstance,
         $platformPublicKeyId       => $twoPlatformPublicKeyInstance,
@@ -155,7 +158,7 @@ try {
 
 ### 同步请求
 
-使用客户端提供的 `get`、`put`、`post`、`patch` 或 `delete` 方法发送同步请求。以 [Native支付下单](https://pay.weixin.qq.com/docs/merchant/apis/native-payment/direct-jsons/native-prepay.html) 为例。
+使用客户端提供的 `get`、`put`、`post`、`patch` 或 `delete` 方法发送同步请求。以 [Native支付下单](https://pay.weixin.qq.com/doc/v3/merchant/4012791877) 为例。
 
 ```php
 try {
@@ -192,7 +195,7 @@ try {
 
 ### 异步请求
 
-使用客户端提供的 `getAsync`、`putAsync`、`postAsync`、`patchAsync` 或 `deleteAsync` 方法发送异步请求。以 [退款申请](https://pay.weixin.qq.com/docs/merchant/apis/native-payment/create.html) 为例。
+使用客户端提供的 `getAsync`、`putAsync`、`postAsync`、`patchAsync` 或 `deleteAsync` 方法发送异步请求。以 [退款申请](https://pay.weixin.qq.com/doc/v3/merchant/4012791883) 为例。
 
 ```php
 $promise = $instance
@@ -270,7 +273,7 @@ GET /v3/pay/transactions/out-trade-no/{out_trade_no}
 + Path 变量的值，以同名参数传入执行方法
 + Query 参数，以名为 `query` 的参数传入执行方法
 
-以 [查询订单](https://pay.weixin.qq.com/docs/merchant/apis/native-payment/query-by-wx-trade-no.html) `GET` 方法为例：
+以 [查询订单](https://pay.weixin.qq.com/doc/v3/merchant/4012791879) `GET` 方法为例：
 
 ```php
 $promise = $instance
@@ -283,7 +286,7 @@ $promise = $instance
 ]);
 ```
 
-以 [关闭订单](https://pay.weixin.qq.com/docs/merchant/apis/native-payment/close-order.html) `POST` 方法为例：
+以 [关闭订单](https://pay.weixin.qq.com/doc/v3/merchant/4012791881) `POST` 方法为例：
 
 ```php
 $promise = $instance
@@ -298,7 +301,7 @@ $promise = $instance
 
 ## 更多例子
 
-### [视频文件上传](https://pay.weixin.qq.com/docs/partner/apis/contracted-merchant-application/video-upload.html)
+### [视频文件上传](https://pay.weixin.qq.com/doc/v3/partner/4012761084)
 
 ```php
 // 参考上述指引说明，并引入 `MediaUtil` 正常初始化，无额外条件
@@ -316,7 +319,7 @@ $resp = $instance-
 ]);
 ```
 
-### [营销图片上传](https://pay.weixin.qq.com/docs/partner/apis/cash-coupons/upload-image.html)
+### [营销图片上传](https://pay.weixin.qq.com/doc/v3/partner/4012759802)
 
 ```php
 use WeChatPay\Util\MediaUtil;
@@ -338,7 +341,7 @@ $resp = $instance
 + 微信支付要求加密上送的敏感信息
 + 微信支付会加密下行的敏感信息
 
-下面以 [特约商户进件](https://pay.weixin.qq.com/docs/partner/apis/contracted-merchant-application/applyment/submit.html) 为例，演示如何进行 [敏感信息加解密](https://pay.weixin.qq.com/docs/partner/development/interface-rules/sensitive-data-encryption.html)。
+下面以 [特约商户进件](https://pay.weixin.qq.com/doc/v3/partner/4012719997) 为例，演示如何进行 [敏感信息加解密](https://pay.weixin.qq.com/doc/v3/partner/4013059053)。
 
 ```php
 use WeChatPay\Crypto\Rsa;
@@ -369,7 +372,7 @@ $resp = $instance
 
 ## 签名
 
-你可以使用 `Rsa::sign()` 计算调起支付时所需参数签名。以 [JSAPI支付](https://pay.weixin.qq.com/docs/merchant/apis/jsapi-payment/jsapi-transfer-payment.html) 为例。
+你可以使用 `Rsa::sign()` 计算调起支付时所需参数签名。以 [JSAPI支付](https://pay.weixin.qq.com/doc/v3/merchant/4012791857) 为例。
 
 ```php
 use WeChatPay\Formatter;
@@ -399,7 +402,7 @@ echo json_encode($params);
 1. 从请求头部`Headers`，拿到`Wechatpay-Signature`、`Wechatpay-Nonce`、`Wechatpay-Timestamp`、`Wechatpay-Serial`及`Request-ID`，商户侧`Web`解决方案可能有差异，请求头可能大小写不敏感，请根据自身应用来定；
 2. 获取请求`body`体的`JSON`纯文本；
 3. 检查通知消息头标记的`Wechatpay-Timestamp`偏移量是否在5分钟之内；
-4. 调用`SDK`内置方法，[构造验签名串](https://pay.weixin.qq.com/docs/merchant/development/verify-signature-overview/overview-signature-and-verification.html) 然后经`Rsa::verfify`验签；
+4. 调用`SDK`内置方法，[构造验签名串](https://pay.weixin.qq.com/doc/v3/merchant/4012365342) 然后经`Rsa::verfify`验签；
 5. 消息体需要解密的，调用`SDK`内置方法解密；
 6. 如遇到问题，请拿`Request-ID`点击[这里](https://support.pay.weixin.qq.com/online-service?utm_source=github&utm_medium=wechatpay-php&utm_content=apiv3)，联系官方在线技术支持；
 
