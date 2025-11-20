@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+        php-version: ['7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
         os: [ubuntu-latest, macOS-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -90,7 +90,7 @@ jobs:
         id: phpstan-php-8_2-8_3
 
       - run: vendor/bin/phpstan analyse --no-progress --memory-limit=-1 -c phpstan.v8.4.neon
-        if: matrix.php-version == '8.4'
+        if: matrix.php-version >= '8.4'
         id: phpstan-php-8_4
 
       - run: |
